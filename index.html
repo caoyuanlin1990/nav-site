@@ -3,132 +3,387 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>导航系统 KV版</title>
-
+<title>导航系统 - 标准版</title>
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-body{font-family:sans-serif;background:#f5f5f5;margin:0;padding:20px}
-.card{background:#fff;padding:15px;border-radius:10px;margin-bottom:10px;cursor:pointer}
-.btn{padding:10px;border:none;border-radius:8px;background:#165DFF;color:#fff;margin:5px 0;width:100%}
-input{width:100%;padding:10px;margin-bottom:10px;border-radius:8px;border:1px solid #ccc}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: #f7f8fa;
+  color: #333;
+  padding: 20px;
+}
+#front {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #165DFF;
+  margin-bottom: 10px;
+}
+.header .desc {
+  color: #666;
+  font-size: 14px;
+}
+.search-box {
+  margin: 0 auto 35px;
+  max-width: 600px;
+  position: relative;
+}
+.search-input {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 50px;
+  border: 1px solid #e5e6eb;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+.search-input:focus {
+  border-color: #165DFF;
+  box-shadow: 0 2px 15px rgba(22, 93, 255, 0.15);
+}
+.category-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 25px;
+  justify-content: center;
+}
+.category-btn {
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid #e5e6eb;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+.category-btn.active,
+.category-btn:hover {
+  background: #165DFF;
+  color: #fff;
+  border-color: #165DFF;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border-color: #165DFF;
+}
+.card .name {
+  font-weight: 500;
+  font-size: 15px;
+  margin-top: 4px;
+  color: #333;
+}
+.card .cat {
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+}
+.admin-entry {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 50px;
+  background: #165DFF;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(22,93,255,0.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 后台样式 */
+#login, #admin {
+  max-width: 600px;
+  margin: 0 auto;
+  display: none;
+}
+.btn {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #165DFF;
+  color: #fff;
+  margin: 5px 0;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+.sort-btn {
+  padding: 6px 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin: 0 3px;
+  cursor: pointer;
+}
+.sort-btn:hover {
+  background: #165DFF;
+  color: #fff;
+  border-color: #165DFF;
+}
+.admin-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
 </style>
 </head>
 
-<body>
-
-<h2>🧭 导航系统（KV版）</h2>
-
-<div id="login">
-  <input id="pwd" placeholder="输入管理密码">
-  <button class="btn" onclick="login()">登录</button>
+<!-- 前台 -->
+<div id="front">
+  <div class="header">
+    <h1><i class="fa-solid fa-compass"></i> 常用导航</h1>
+    <p class="desc">简洁 · 高效 · 安全</p>
+  </div>
+  <div class="search-box">
+    <input class="search-input" id="f_search" placeholder="搜索网站或分类..." oninput="renderFront()">
+  </div>
+  <div class="category-bar" id="categoryWrap"></div>
+  <div class="grid" id="f_list"></div>
+  <div class="admin-entry" onclick="showAdmin()">
+    <i class="fa-solid fa-user-shield"></i> 后台管理
+  </div>
 </div>
 
-<div id="admin" style="display:none;">
-  <h3>⚙️ 管理后台</h3>
+<!-- 登录 -->
+<div id="login">
+  <h3><i class="fa-solid fa-lock"></i> 管理员登录</h3>
+  <input id="pwd" placeholder="输入管理密码">
+  <button class="btn" onclick="login()"><i class="fa-solid fa-right-to-bracket"></i> 登录</button>
+  <button class="btn" onclick="showFront()"><i class="fa-solid fa-house"></i> 返回前台</button>
+</div>
 
+<!-- 管理后台 -->
+<div id="admin">
+  <div class="head">
+    <h3><i class="fa-solid fa-gears"></i> 管理后台</h3>
+    <button class="btn" style="width:auto" onclick="showFront()"><i class="fa-solid fa-house"></i> 前台</button>
+  </div>
+  <input id="search" placeholder="搜索" oninput="render()">
+  <input id="category" placeholder="分类">
   <input id="name" placeholder="名称">
   <input id="url" placeholder="链接">
-  <button class="btn" onclick="add()">➕ 添加</button>
-
-  <button class="btn" onclick="saveToKV()">☁️ 同步到云端</button>
-
+  <button class="btn" onclick="add()"><i class="fa-solid fa-plus"></i> 添加</button>
+  <textarea id="batch" placeholder="批量添加：每行 名称|链接"></textarea>
+  <button class="btn" onclick="batchAdd()"><i class="fa-solid fa-layer-group"></i> 批量添加</button>
+  <button class="btn" onclick="saveToKV()"><i class="fa-solid fa-cloud-arrow-up"></i> 同步云端</button>
   <div id="list"></div>
 </div>
 
 <script>
-// ====== 改这里 ======
 const KV_API = "https://jj.xiaohe1999.dpdns.org";
+let data = { lines: [] };
+let currentCat = "全部";
 
-// ====== 数据 ======
-let data = {
-  lines: []
-};
-
-// ====== 登录 ======
-function login(){
+function showFront() {
+  document.getElementById("front").style.display = "block";
+  document.getElementById("login").style.display = "none";
+  document.getElementById("admin").style.display = "none";
+  renderFront();
+}
+function showAdmin() {
+  document.getElementById("front").style.display = "none";
+  document.getElementById("login").style.display = "block";
+  document.getElementById("admin").style.display = "none";
+}
+function login() {
   const pwd = document.getElementById("pwd").value;
-  if(pwd==="778899"){
-    document.getElementById("login").style.display="none";
-    document.getElementById("admin").style.display="block";
+  if (pwd === "778899") {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("admin").style.display = "block";
     loadFromKV();
-  }else{
-    alert("密码错误");
-  }
+  } else alert("密码错误");
 }
 
-// ====== 渲染 ======
-function render(){
-  const list = document.getElementById("list");
-  list.innerHTML = "";
-
-  data.lines.forEach((item,i)=>{
-    list.innerHTML += `
+function getFrontList() {
+  const kw = document.getElementById("f_search").value.toLowerCase();
+  let list = data.lines || [];
+  if (currentCat !== "全部") list = list.filter(i => (i.category || "未分类") === currentCat);
+  return list.filter(item =>
+    item.name.toLowerCase().includes(kw) || (item.category || "").toLowerCase().includes(kw)
+  );
+}
+function renderCategoryBar() {
+  const wrap = document.getElementById("categoryWrap");
+  const cats = ["全部"];
+  data.lines.forEach(i => {
+    const c = i.category || "未分类";
+    if (!cats.includes(c)) cats.push(c);
+  });
+  wrap.innerHTML = "";
+  cats.forEach(cat => {
+    const cls = cat === currentCat ? "category-btn active" : "category-btn";
+    wrap.innerHTML += `<button class="${cls}" onclick="switchCat('${cat}')">${cat}</button>`;
+  });
+}
+function switchCat(cat) {
+  currentCat = cat;
+  renderFront();
+}
+function renderFront() {
+  const el = document.getElementById("f_list");
+  el.innerHTML = "";
+  renderCategoryBar();
+  getFrontList().forEach(item => {
+    el.innerHTML += `
       <div class="card" onclick="window.open('${item.url}')">
-        ${item.name}
-        <br>
-        <button onclick="del(${i});event.stopPropagation()">删除</button>
+        <div class="name">${item.name}</div>
+        <div class="cat">${item.category || "未分类"}</div>
       </div>
     `;
   });
 }
 
-// ====== 添加 ======
-function add(){
-  const name = document.getElementById("name").value;
-  const url = document.getElementById("url").value;
-
-  if(!name || !url){
-    alert("不能为空");
-    return;
-  }
-
-  data.lines.push({name,url});
-  render();
+function getFilteredList() {
+  const kw = document.getElementById("search")?.value.toLowerCase() || "";
+  return data.lines.filter(item =>
+    item.name.toLowerCase().includes(kw) || (item.category || "").toLowerCase().includes(kw)
+  );
+}
+function render() {
+  const el = document.getElementById("list");
+  el.innerHTML = "";
+  getFilteredList().forEach((item, idx) => {
+    el.innerHTML += `
+      <div class="admin-card">
+        <div onclick="go(${idx})">
+          ${item.name} | ${item.category||"未分类"} 
+          <span style="color:#165DFF">访问：${item.count||0}</span>
+        </div>
+        <div style="margin-top:8px">
+          <button class="sort-btn" onclick="up(${idx})"><i class="fa-solid fa-arrow-up"></i></button>
+          <button class="sort-btn" onclick="down(${idx})"><i class="fa-solid fa-arrow-down"></i></button>
+          <button class="sort-btn" onclick="edit(${idx})"><i class="fa-solid fa-pen"></i></button>
+          <button class="sort-btn" onclick="del(${idx})"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>
+    `;
+  });
 }
 
-// ====== 删除 ======
-function del(i){
-  data.lines.splice(i,1);
+function go(i) {
+  const real = data.lines.indexOf(getFilteredList()[i]);
+  data.lines[real].count = (data.lines[real].count || 0) + 1;
+  window.open(data.lines[real].url); render();
+}
+function add() {
+  const n = document.getElementById("name").value.trim();
+  const u = document.getElementById("url").value.trim();
+  const c = document.getElementById("category").value.trim();
+  if (!n || !u) return alert("不能为空");
+  data.lines.push({ name: n, url: u, category: c, count: 0 });
   render();
 }
-
-// ====== 从KV读取 ======
-async function loadFromKV(){
-  try{
-    const res = await fetch(`${KV_API}/get?t=${Date.now()}`);
-    const d = await res.json();
-
-    if(d.lines){
-      data = d;
-    }
-
+function batchAdd() {
+  const t = document.getElementById("batch").value.trim();
+  t.split("\n").forEach(line => {
+    const [n, u] = line.split("|");
+    if (n && u) data.lines.push({ name: n.trim(), url: u.trim(), category: "", count: 0 });
+  });
+  render(); alert("批量添加完成");
+}
+function edit(i) {
+  const item = getFilteredList()[i];
+  const real = data.lines.indexOf(item);
+  let nn = prompt("名称", item.name);
+  let uu = prompt("链接", item.url);
+  let cc = prompt("分类", item.category || "");
+  if (nn && uu) {
+    data.lines[real].name = nn;
+    data.lines[real].url = uu;
+    data.lines[real].category = cc;
     render();
-
-  }catch(e){
-    alert("加载失败");
   }
 }
+function del(i) {
+  const real = data.lines.indexOf(getFilteredList()[i]);
+  data.lines.splice(real, 1); render();
+}
+function up(i) {
+  const real = data.lines.indexOf(getFilteredList()[i]);
+  if (real <= 0) return;
+  [data.lines[real], data.lines[real-1]] = [data.lines[real-1], data.lines[real]];
+  render();
+}
+function down(i) {
+  const real = data.lines.indexOf(getFilteredList()[i]);
+  if (real >= data.lines.length-1) return;
+  [data.lines[real], data.lines[real+1]] = [data.lines[real+1], data.lines[real]];
+  render();
+}
 
-// ====== 保存到KV ======
-async function saveToKV(){
-  try{
-    await fetch(`${KV_API}/set`,{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        password:"668899",
-        data
-      })
+async function loadFromKV() {
+  try {
+    const r = await fetch(`${KV_API}/get?t=${Date.now()}`);
+    const d = await r.json();
+    if (d.lines) data = d;
+    data.lines.forEach(i => { i.count ??= 0; i.category ??= "" });
+    render(); renderFront();
+  } catch (e) { alert("加载失败") }
+}
+async function saveToKV() {
+  try {
+    await fetch(`${KV_API}/set`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: "668899", data })
     });
-
-    alert("☁️ 已同步");
-
-  }catch(e){
-    alert("❌ 失败");
-  }
+    alert("同步成功");
+  } catch (e) { alert("同步失败") }
 }
-</script>
 
+loadFromKV();
+showFront();
+</script>
 </body>
 </html>
