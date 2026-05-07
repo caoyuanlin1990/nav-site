@@ -1,132 +1,718 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>导航系统 KV版</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Notion CMS Pro</title>
 
 <style>
-body{font-family:sans-serif;background:#f5f5f5;margin:0;padding:20px}
-.card{background:#fff;padding:15px;border-radius:10px;margin-bottom:10px;cursor:pointer}
-.btn{padding:10px;border:none;border-radius:8px;background:#165DFF;color:#fff;margin:5px 0;width:100%}
-input{width:100%;padding:10px;margin-bottom:10px;border-radius:8px;border:1px solid #ccc}
+:root{
+  --bg:#f7f7f5;
+  --sidebar:#fbfbfa;
+  --card:#ffffff;
+  --line:#ebebea;
+  --text:#191919;
+  --sub:#787774;
+  --primary:#2f76ff;
+  --danger:#ff4d4f;
+  --radius:14px;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.layout{
+  display:flex;
+  height:100vh;
+}
+
+/* 左侧 */
+.sidebar{
+  width:280px;
+  background:var(--sidebar);
+  border-right:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+}
+
+.logo{
+  padding:22px;
+  font-size:22px;
+  font-weight:700;
+}
+
+.menu{
+  padding:0 12px;
+}
+
+.menu-item{
+  padding:12px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  margin-bottom:4px;
+  transition:.15s;
+  color:var(--sub);
+}
+
+.menu-item:hover{
+  background:#efefee;
+}
+
+.menu-item.active{
+  background:#e8f0ff;
+  color:var(--primary);
+  font-weight:600;
+}
+
+/* 顶部 */
+.topbar{
+  height:64px;
+  border-bottom:1px solid var(--line);
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+}
+
+.search{
+  width:300px;
+  background:#f1f1ef;
+  border:none;
+  padding:12px 14px;
+  border-radius:12px;
+  outline:none;
+}
+
+.top-actions{
+  display:flex;
+  gap:10px;
+}
+
+/* 内容 */
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.content{
+  padding:40px;
+  overflow:auto;
+}
+
+.page-title{
+  font-size:42px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.page-desc{
+  color:var(--sub);
+  margin-bottom:30px;
+}
+
+/* block */
+.block{
+  background:#fff;
+  border-radius:18px;
+  border:1px solid var(--line);
+  padding:18px;
+  margin-bottom:16px;
+  transition:.15s;
+}
+
+.block:hover{
+  box-shadow:0 4px 20px rgba(0,0,0,.04);
+}
+
+.block-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+
+.block-title{
+  font-size:18px;
+  font-weight:700;
+}
+
+.block-actions{
+  display:flex;
+  gap:8px;
+}
+
+/* 按钮 */
+.btn{
+  border:none;
+  border-radius:10px;
+  padding:10px 16px;
+  cursor:pointer;
+  background:var(--primary);
+  color:#fff;
+  font-weight:600;
+}
+
+.btn.gray{
+  background:#f1f1ef;
+  color:#333;
+}
+
+.btn.red{
+  background:var(--danger);
+}
+
+/* 输入 */
+.input{
+  width:100%;
+  border:none;
+  background:#f7f7f5;
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:12px;
+  outline:none;
+}
+
+/* grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.card:hover{
+  transform:translateY(-2px);
+}
+
+.card-icon{
+  font-size:30px;
+  margin-bottom:10px;
+}
+
+.card-title{
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+.card-url{
+  color:var(--sub);
+  font-size:13px;
+  word-break:break-all;
+}
+
+/* 编辑 */
+.inline-edit{
+  border:none;
+  background:transparent;
+  font-size:16px;
+  width:100%;
+  outline:none;
+}
+
+/* 登录 */
+.login{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.login-box{
+  width:380px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:32px;
+}
+
+.login-title{
+  font-size:32px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.login-desc{
+  color:var(--sub);
+  margin-bottom:24px;
+}
+
+/* 响应式 */
+@media(max-width:900px){
+
+  .sidebar{
+    display:none;
+  }
+
+  .content{
+    padding:20px;
+  }
+
+  .page-title{
+    font-size:30px;
+  }
+
+  .search{
+    width:160px;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<h2>🧭 导航系统（KV版）</h2>
+<!-- 登录 -->
+<div class="login" id="loginPage">
 
-<div id="login">
-  <input id="pwd" placeholder="输入管理密码">
-  <button class="btn" onclick="login()">登录</button>
+  <div class="login-box">
+
+    <div class="login-title">
+      🧠 Notion CMS
+    </div>
+
+    <div class="login-desc">
+      企业级导航管理系统
+    </div>
+
+    <input
+      id="pwd"
+      type="password"
+      class="input"
+      placeholder="输入管理员密码">
+
+    <button class="btn" style="width:100%"
+      onclick="login()">
+      登录
+    </button>
+
+  </div>
+
 </div>
 
-<div id="admin" style="display:none;">
-  <h3>⚙️ 管理后台</h3>
+<!-- 主界面 -->
+<div class="layout" id="app" style="display:none;">
 
-  <input id="name" placeholder="名称">
-  <input id="url" placeholder="链接">
-  <button class="btn" onclick="add()">➕ 添加</button>
+  <!-- 左侧 -->
+  <div class="sidebar">
 
-  <button class="btn" onclick="saveToKV()">☁️ 同步到云端</button>
+    <div class="logo">
+      🧭 导航工作区
+    </div>
 
-  <div id="list"></div>
+    <div class="menu">
+
+      <div class="menu-item active">
+        📄 Dashboard
+      </div>
+
+      <div class="menu-item">
+        🌐 导航管理
+      </div>
+
+      <div class="menu-item">
+        📂 分类管理
+      </div>
+
+      <div class="menu-item">
+        📢 公告
+      </div>
+
+      <div class="menu-item">
+        ⚙️ 设置
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 主内容 -->
+  <div class="main">
+
+    <!-- 顶栏 -->
+    <div class="topbar">
+
+      <input
+        class="search"
+        placeholder="搜索导航..."
+        oninput="searchNav(this.value)">
+
+      <div class="top-actions">
+
+        <button class="btn gray"
+          onclick="addCategory()">
+          + 分类
+        </button>
+
+        <button class="btn"
+          onclick="addNav()">
+          + 导航
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- 内容 -->
+    <div class="content">
+
+      <div class="page-title">
+        Dashboard
+      </div>
+
+      <div class="page-desc">
+        管理你的导航工作区 · 自动同步至云端
+      </div>
+
+      <!-- 公告 -->
+      <div class="block">
+
+        <div class="block-header">
+
+          <div class="block-title">
+            📢 系统公告
+          </div>
+
+        </div>
+
+        <input
+          id="noticeInput"
+          class="input"
+          placeholder="输入公告..."
+          oninput="updateNotice(this.value)">
+
+      </div>
+
+      <!-- 分类 -->
+      <div class="block">
+
+        <div class="block-header">
+
+          <div class="block-title">
+            📂 分类
+          </div>
+
+        </div>
+
+        <div id="categoryList"></div>
+
+      </div>
+
+      <!-- 导航 -->
+      <div class="block">
+
+        <div class="block-header">
+
+          <div class="block-title">
+            🌐 导航卡片
+          </div>
+
+        </div>
+
+        <div class="grid" id="navGrid"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
 <script>
-// ====== 改这里 ======
-const KV_API = "https://jj.xiaohe1999.dpdns.org";
+const API = "https://jj.xiaohe1999.dpdns.org";
 
-// ====== 数据 ======
-let data = {
-  lines: []
+let token = localStorage.getItem("token") || "";
+
+let db = {
+  categories:[],
+  lines:[],
+  notice:""
 };
 
-// ====== 登录 ======
-function login(){
+// 登录
+async function login(){
+
   const pwd = document.getElementById("pwd").value;
-  if(pwd==="778899"){
-    document.getElementById("login").style.display="none";
-    document.getElementById("admin").style.display="block";
-    loadFromKV();
+
+  const res = await fetch(API + "/api/admin/login",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({pwd})
+  });
+
+  const d = await res.json();
+
+  if(d.code === 0){
+
+    token = d.token;
+
+    localStorage.setItem("token", token);
+
+    init();
+
   }else{
+
     alert("密码错误");
   }
 }
 
-// ====== 渲染 ======
-function render(){
-  const list = document.getElementById("list");
-  list.innerHTML = "";
+// 初始化
+async function init(){
 
-  data.lines.forEach((item,i)=>{
-    list.innerHTML += `
-      <div class="card" onclick="window.open('${item.url}')">
-        ${item.name}
-        <br>
-        <button onclick="del(${i});event.stopPropagation()">删除</button>
+  loginPage.style.display = "none";
+  app.style.display = "flex";
+
+  await load();
+}
+
+// 读取
+async function load(){
+
+  try{
+
+    const res = await fetch(API + "/api/config/get");
+
+    const d = await res.json();
+
+    if(d.code === 0 && d.data){
+
+      db = d.data;
+    }
+
+  }catch(e){}
+
+  if(!db.categories){
+    db.categories = [];
+  }
+
+  if(!db.lines){
+    db.lines = [];
+  }
+
+  render();
+}
+
+// 渲染
+function render(){
+
+  renderCategories();
+  renderNavs();
+
+  noticeInput.value = db.notice || "";
+}
+
+// 分类
+function renderCategories(){
+
+  let html = "";
+
+  db.categories.forEach((c,index)=>{
+
+    html += `
+      <div class="card" style="margin-bottom:10px">
+
+        <input
+          class="inline-edit"
+          value="${c.name}"
+          onchange="renameCategory(${index},this.value)">
+
+        <button
+          class="btn red"
+          style="margin-top:10px"
+          onclick="delCategory(${index})">
+          删除
+        </button>
+
       </div>
     `;
   });
+
+  categoryList.innerHTML = html;
 }
 
-// ====== 添加 ======
-function add(){
-  const name = document.getElementById("name").value;
-  const url = document.getElementById("url").value;
+// 导航
+function renderNavs(list = db.lines){
 
-  if(!name || !url){
-    alert("不能为空");
-    return;
-  }
+  let html = "";
 
-  data.lines.push({name,url});
+  list.forEach((n,index)=>{
+
+    html += `
+      <div class="card"
+        onclick="window.open('${n.url}')">
+
+        <div class="card-icon">
+          🌐
+        </div>
+
+        <div class="card-title">
+          ${n.name}
+        </div>
+
+        <div class="card-url">
+          ${n.url}
+        </div>
+
+        <div style="margin-top:14px">
+
+          <button
+            class="btn red"
+            onclick="event.stopPropagation();delNav(${index})">
+            删除
+          </button>
+
+        </div>
+
+      </div>
+    `;
+  });
+
+  navGrid.innerHTML = html;
+}
+
+// 添加分类
+function addCategory(){
+
+  const name = prompt("分类名称");
+
+  if(!name) return;
+
+  db.categories.push({
+    id:Date.now(),
+    name
+  });
+
   render();
+
+  autoSave();
 }
 
-// ====== 删除 ======
-function del(i){
-  data.lines.splice(i,1);
+// 删除分类
+function delCategory(index){
+
+  db.categories.splice(index,1);
+
   render();
+
+  autoSave();
 }
 
-// ====== 从KV读取 ======
-async function loadFromKV(){
-  try{
-    const res = await fetch(`${KV_API}/get?t=${Date.now()}`);
-    const d = await res.json();
+// 修改分类
+function renameCategory(index,name){
 
-    if(d.lines){
-      data = d;
-    }
+  db.categories[index].name = name;
 
-    render();
-
-  }catch(e){
-    alert("加载失败");
-  }
+  autoSave();
 }
 
-// ====== 保存到KV ======
-async function saveToKV(){
+// 添加导航
+function addNav(){
+
+  const name = prompt("导航名称");
+
+  if(!name) return;
+
+  const url = prompt("导航链接");
+
+  if(!url) return;
+
+  db.lines.push({
+    name,
+    url
+  });
+
+  render();
+
+  autoSave();
+}
+
+// 删除导航
+function delNav(index){
+
+  db.lines.splice(index,1);
+
+  render();
+
+  autoSave();
+}
+
+// 公告
+function updateNotice(v){
+
+  db.notice = v;
+
+  autoSave();
+}
+
+// 搜索
+function searchNav(keyword){
+
+  keyword = keyword.toLowerCase();
+
+  const list = db.lines.filter(n=>
+    n.name.toLowerCase().includes(keyword) ||
+    n.url.toLowerCase().includes(keyword)
+  );
+
+  renderNavs(list);
+}
+
+// 保存
+async function save(){
+
   try{
-    await fetch(`${KV_API}/set`,{
+
+    await fetch(API + "/api/config/save",{
+
       method:"POST",
+
       headers:{
-        "Content-Type":"application/json"
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + token
       },
-      body:JSON.stringify({
-        password:"668899",
-        data
-      })
+
+      body:JSON.stringify(db)
     });
 
-    alert("☁️ 已同步");
-
   }catch(e){
-    alert("❌ 失败");
+
+    console.log(e);
   }
+}
+
+// 自动保存
+function autoSave(){
+
+  clearTimeout(window.saveTimer);
+
+  window.saveTimer = setTimeout(()=>{
+    save();
+  },800);
+}
+
+// 自动登录
+if(token){
+
+  init();
 }
 </script>
 
